@@ -1,10 +1,12 @@
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
+const studentRouter = require('../routers/studentRouter');
+
 
 const port = process.env.port || 5000
 
-const app = express()
+const app = express();
 mongoose
     .connect(process.env.MONGODB_URI)
     .then(() => {
@@ -42,24 +44,18 @@ const Schema = mongoose.Schema ({
 
 })
 
+app.use(express.json());
+app.router(studentRouter);
+
+// app.get("/students", async (req, res) => {
+//   // ici tu mets ton code pour récupérer les étudiants
+//   res.status(200).send("Liste des étudiants");
+// });
 
 
-const studentsModel = mongoose.model("students", mongoose.Schema())
-
-app.get("/students", async(req, res) => {
-    const students = await studentsModel.find();
 
 
-    if (!students){
-        res.status(404).send({
-            message: "Operation echoue"
-        });
-        return;
-    }
-    res.send({
-        message: "Operation reussie", students
-    });
-})
+
 
 
 app.listen(port, () => {
@@ -67,8 +63,8 @@ app.listen(port, () => {
 
 })
 
-app.get("produits", (req, res) => {
-    res.send({ message: "Hello Hawa!" })
+// app.get("/students", (req, res) => {
+//     res.send({ message: "Hello Hawa!" })
     
-})
+// })
 
